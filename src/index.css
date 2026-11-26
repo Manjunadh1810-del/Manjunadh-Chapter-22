@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@theme{--color-ink:#050505;--color-night:#0A0A0A;--color-champagne:#D4AF70;--color-gold:#C9A45C;--color-silver:#D9D9D9;--font-serif:"Cinzel",Georgia,serif;--font-sans:"Inter",system-ui,sans-serif}
+html,body{background:#050505;color:#fff;font-family:var(--font-sans);overflow-x:hidden}
+.title{font-family:var(--font-serif);letter-spacing:.12em;text-transform:uppercase}
+.goldtext{background:linear-gradient(120deg,#C9A45C,#fff3d6 45%,#D4AF70 70%,#C9A45C);-webkit-background-clip:text;background-clip:text;color:transparent}
+button:focus-visible{outline:2px solid #D4AF70;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}

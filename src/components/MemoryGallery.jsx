@@ -1,0 +1,14 @@
+import {useEffect,useState} from 'react';import {motion,AnimatePresence} from 'framer-motion';import {X,ChevronLeft,ChevronRight} from 'lucide-react';import {EVENT} from '../config.js';
+const ph=(i)=>'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750"><defs><radialGradient id="g" cx="50%" cy="30%"><stop offset="0" stop-color="#D4AF70" stop-opacity=".45"/><stop offset="1" stop-color="#0A0A0A"/></radialGradient></defs><rect width="600" height="750" fill="url(#g)"/><text x="300" y="380" fill="#D9D9D9" font-family="serif" font-size="28" text-anchor="middle" letter-spacing="6">PHOTO ${i+1}</text></svg>`);
+export default function MemoryGallery(){const [sel,setSel]=useState(null),g=EVENT.gallery,n=g.length;
+  useEffect(()=>{if(sel===null)return;const k=e=>{if(e.key==='Escape')setSel(null);if(e.key==='ArrowRight')setSel(s=>(s+1)%n);if(e.key==='ArrowLeft')setSel(s=>(s-1+n)%n)};addEventListener('keydown',k);return()=>removeEventListener('keydown',k)},[sel,n]);
+  const src=i=>g[i].src||ph(i);
+  return(<section className="relative z-10 px-6 py-28 max-w-5xl mx-auto"><h2 className="title goldtext text-3xl sm:text-5xl text-center">Memory Gallery</h2>
+    <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-3">{g.map((p,i)=>(<motion.button key={i} aria-label={`Open ${p.caption}`} onClick={()=>setSel(i)} whileHover={{scale:1.02}} className="aspect-[4/5] overflow-hidden border border-champagne/20 bg-night">
+      <img src={src(i)} alt={p.caption} loading="lazy" decoding="async" onError={e=>{e.currentTarget.src=ph(i)}} className="w-full h-full object-cover"/></motion.button>))}</div>
+    <AnimatePresence>{sel!==null&&(<motion.div role="dialog" aria-modal="true" className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setSel(null)}>
+      <button aria-label="Close" className="absolute top-4 right-4 text-champagne"><X/></button>
+      <button aria-label="Previous" onClick={e=>{e.stopPropagation();setSel((sel-1+n)%n)}} className="absolute left-3 text-champagne"><ChevronLeft size={36}/></button>
+      <button aria-label="Next" onClick={e=>{e.stopPropagation();setSel((sel+1)%n)}} className="absolute right-3 text-champagne"><ChevronRight size={36}/></button>
+      <AnimatePresence mode="wait"><motion.figure key={sel} initial={{opacity:0,scale:.96}} animate={{opacity:1,scale:1}} exit={{opacity:0}} onClick={e=>e.stopPropagation()} className="max-h-full text-center">
+        <img src={src(sel)} alt={g[sel].caption} className="max-h-[80vh] max-w-full mx-auto"/><figcaption className="mt-3 text-silver/70 text-sm">{g[sel].caption}</figcaption></motion.figure></AnimatePresence></motion.div>)}</AnimatePresence></section>)}
